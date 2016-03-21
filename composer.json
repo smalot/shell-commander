@@ -1,0 +1,21 @@
+{
+    "name": "smalot/shell-commander",
+    "description": "Wrapper for shell commands",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastien Malot",
+            "email": "sebastien@malot.fr"
+        }
+    ],
+    "require": {
+    },
+    "require-dev": {
+        "atoum/atoum": "^2.6"
+    },
+    "autoload": {
+        "psr-0": {
+            "Smalot\\Commander\\": "src"
+        }
+    }
+}
