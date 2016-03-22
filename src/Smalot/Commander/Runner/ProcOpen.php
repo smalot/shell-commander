@@ -6,10 +6,17 @@ use Smalot\Commander\Command;
 
 /**
  * Class ProcOpen
+ *
+ * cf: https://github.com/phpbrew/phpbrew/blob/master/src/PhpBrew/Process.php
+ *
  * @package Smalot\Commander\Runner
  */
 class ProcOpen
 {
+    const PIPE_STDIN = 0;
+    const PIPE_STDOUT = 1;
+    const PIPE_STDERR = 2;
+
     /**
      * @var int
      */
@@ -44,9 +51,16 @@ class ProcOpen
      */
     public function run(Command $command, $timeout = -1)
     {
-        $this->execute((string) $command, null, $timeout);
+        $process = new Process((string) $command, null, array(), null, $timeout);
+        $start = microtime(true);
+        $process->run();
+        $this->duration = microtime(true) - $start;
 
-        return $this->getOutput();
+        $this->returnCode = $process->getExitCode();
+        $this->stdout = $process->getOutput();
+        $this->stderr = $process->getErrorOutput();
+
+        return $this->stdout;
     }
 
     /**
@@ -75,71 +89,5 @@ class ProcOpen
      */
     public function getError() {
         return $this->stderr;
-    }
-
-    /**
-     * @param string $cmd
-     * @param string|null $stdin
-     * @param int $timeout
-     */
-    protected function execute($cmd, $stdin = null, $timeout = -1)
-    {
-        // Todo: mix with this article
-        // http://blog.dubbelboer.com/2012/08/24/execute-with-timeout.html
-
-        $proc = proc_open(
-          $cmd,
-          [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
-          $pipes
-        );
-
-//        if (isset($stdin)) {
-//            fwrite($pipes[0], $stdin);
-//        }
-        stream_set_blocking($pipes[0], 0);
-        fclose($pipes[0]);
-
-        stream_set_timeout($pipes[1], 0);
-        stream_set_timeout($pipes[2], 0);
-
-        stream_set_blocking($pipes[1], 0);
-        stream_set_blocking($pipes[2], 0);
-
-        $this->stdout = '';
-
-        $start = microtime(true);
-
-        echo 'start';
-
-        while (true) {
-            echo microtime(true) - $start . ' - ' . $timeout . "\n";
-            usleep(1000);
-
-            if ($data = fread($pipes[1], 4096)) {
-                $this->stdout .= $data;
-            }
-
-            $stat = proc_get_status($proc);
-//            var_dump($stat);
-            $meta = stream_get_meta_data($pipes[1]);
-            if (microtime(true) - $start > $timeout) {
-                break;
-            }
-            if ($meta['timed_out']) {
-                continue;
-            }
-        }
-
-        echo 'end';
-
-        $this->stdout .= stream_get_contents($pipes[1]);
-        $this->stderr = stream_get_contents($pipes[2]);
-
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        $pipes = null;
-
-        $this->returnCode = 0;//proc_close($proc);
-        $this->duration = microtime(true) - $start;
     }
 }
