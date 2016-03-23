@@ -11,12 +11,8 @@ use Smalot\Commander\Command;
  *
  * @package Smalot\Commander\Runner
  */
-class ProcOpen
+class ProcOpen extends RunnerBase
 {
-    const PIPE_STDIN = 0;
-    const PIPE_STDOUT = 1;
-    const PIPE_STDERR = 2;
-
     /**
      * @var int
      */
@@ -54,7 +50,7 @@ class ProcOpen
         // Reset previous values.
         $this->duration = $this->returnCode = $this->stdout = $this->stderr = null;
 
-        $process = new Process((string) $command, null, $command->getEnvironmentVariables(), null, $timeout);
+        $process = new Process((string) $command, null, $this->getEnvironmentVariables(), null, $timeout);
         $start = microtime(true);
         $process->run();
 

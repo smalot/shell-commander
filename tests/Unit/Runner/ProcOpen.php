@@ -14,6 +14,7 @@ class ProcOpen extends atoum\test
     public function testRun()
     {
         $runner = new \Smalot\Commander\Runner\ProcOpen();
+        $runner->addEnvironmentVariable('HOME', '/home/username');
 
         // Commande OK !
         $command = new \Smalot\Commander\Command('ls');
@@ -30,7 +31,6 @@ class ProcOpen extends atoum\test
 
         // Check environment variable.
         $command = new \Smalot\Commander\Command('echo');
-        $command->addEnvironmentVariable('HOME', '/home/username');
         $command->addParam('$HOME');
         
         $runner->run($command, 1);

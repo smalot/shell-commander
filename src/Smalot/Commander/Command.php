@@ -21,11 +21,6 @@ class Command
     /**
      * @var array
      */
-    protected $environments = [];
-
-    /**
-     * @var array
-     */
     protected $arguments = [];
 
     /**
@@ -55,30 +50,6 @@ class Command
         $this->subCommands[] = $subCommand;
 
         return $this;
-    }
-
-    /**
-     * @param string|EnvironmentVariable $environment
-     * @param string|null $value
-     * @return $this
-     */
-    public function addEnvironmentVariable($environment, $value = null)
-    {
-        if (!$environment instanceof EnvironmentVariable) {
-            $environment = new EnvironmentVariable($environment, $value);
-        }
-
-        $this->environments[$environment->getName()] = $environment->getValue();
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEnvironmentVariables()
-    {
-        return $this->environments;
     }
 
     /**

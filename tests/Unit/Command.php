@@ -30,8 +30,6 @@ class Command extends atoum\test
         $this->assert->string((string)$command)->isEqualTo("'git' 'commit' -m 'message for commit'");
 
         $command = new \Smalot\Commander\Command('git');
-        $command->addEnvironmentVariable('CURRENT', '`pwd`');
-        $command->addEnvironmentVariable('HOME', '/home/username');
         $command->addSubCommand('commit');
         $command->addArgument('interactive');
         $command->addFlag('m', 'message for commit');
