@@ -44,8 +44,9 @@ class ProcOpen extends RunnerBase
      * @param \Smalot\Commander\Command $command
      * @param int $timeout
      * @return string
+     * @throws \RuntimeException
      */
-    public function run(Command $command, $timeout = -1)
+    public function run(Command $command, $timeout = 30)
     {
         // Reset previous values.
         $this->duration = $this->returnCode = $this->stdout = $this->stderr = null;
@@ -58,6 +59,10 @@ class ProcOpen extends RunnerBase
         $this->returnCode = $process->getExitCode();
         $this->stdout = $process->getOutput();
         $this->stderr = $process->getErrorOutput();
+
+        if ($this->returnCode) {
+            throw new \RuntimeException($this->stderr, $this->returnCode);
+        }
 
         return $this->stdout;
     }

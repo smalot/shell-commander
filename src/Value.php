@@ -48,7 +48,7 @@ abstract class Value
     protected function getValuesAsString()
     {
         $values = array_map('escapeshellarg', $this->values);
-        $prefix = sprintf('%s%s ', static::PREFIX, $this->name);
+        $prefix = sprintf('%s%s=', static::PREFIX, $this->name);
 
         return $prefix . join(" ${prefix}", $values);
     }
