@@ -33,6 +33,23 @@ abstract class RunnerBase
     }
 
     /**
+     * @param array $environments
+     * @return $this
+     */
+    public function addEnvironmentVariables($environments)
+    {
+        foreach ($environments as $environment => $value) {
+            if ($value instanceof EnvironmentVariable) {
+                $this->addEnvironmentVariable($value);
+            } else {
+                $this->addEnvironmentVariable($environment, $value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getEnvironmentVariables()

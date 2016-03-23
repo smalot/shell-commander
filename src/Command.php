@@ -69,6 +69,23 @@ class Command
     }
 
     /**
+     * @param array $arguments
+     * @return $this
+     */
+    public function addArguments($arguments)
+    {
+        foreach ($arguments as $argument => $value) {
+            if ($value instanceof Argument) {
+                $this->addArgument($value);
+            } else {
+                $this->addArgument($argument, $value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string|Flag $flag
      * @param string|null $value
      * @return $this
@@ -85,6 +102,23 @@ class Command
     }
 
     /**
+     * @param array $flags
+     * @return $this
+     */
+    public function addFlags($flags)
+    {
+        foreach ($flags as $flag => $value) {
+            if ($value instanceof Flag) {
+                $this->addFlag($value);
+            } else {
+                $this->addFlag($flag, $value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string|Param $param
      * @return $this
      */
@@ -95,6 +129,19 @@ class Command
         }
 
         $this->params[] = $param;
+
+        return $this;
+    }
+
+    /**
+     * @param array $params
+     * @return $this
+     */
+    public function addParams($params)
+    {
+        foreach ($params as $param) {
+            $this->addParam($param);
+        }
 
         return $this;
     }
