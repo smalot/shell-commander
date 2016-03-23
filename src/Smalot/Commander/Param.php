@@ -35,6 +35,10 @@ class Param
      */
     public function __toString()
     {
-        return escapeshellarg($this->value);
+        if (preg_match('/^(\$[A-Z0-9]+)$/i', $this->value)) {
+            return $this->value;
+        } else {
+            return escapeshellarg($this->value);
+        }
     }
 }

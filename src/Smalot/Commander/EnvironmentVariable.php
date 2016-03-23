@@ -6,34 +6,47 @@ namespace Smalot\Commander;
  * Class EnvironmentVariable
  * @package Smalot\Commander
  */
-class EnvironmentVariable extends Value
+class EnvironmentVariable
 {
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @var string
+     */
+    protected $value;
+    
     /**
      * EnvironmentVariable constructor.
      * @param string $name
-     * @param array|null $values
+     * @param string $value
      */
-    public function __construct($name, $values = null)
+    public function __construct($name, $value)
     {
-        if (is_array($values) && count($values) > 1) {
-            throw new \InvalidArgumentException('Array is not supported.');
+        if (!preg_match('/^[a-zA-Z_]+[a-zA-Z0-9_]*$/i', $name)) {
+            throw new \InvalidArgumentException('Invalid environment variable name.');
         }
 
-        parent::__construct($name, $values);
+        $this->name = $name;
+        $this->value = $value;
     }
 
     /**
      * @return string
      */
-    protected function getValuesAsString()
+    public function getName()
     {
-        $value = reset($this->values);
-
-        if (!preg_match('/^(`.*`)$/', $value)) {
-            $value = escapeshellarg($value);
-        }
-
-        return $this->name . '=' . $value;
+        return $this->name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 
     /**
@@ -41,10 +54,6 @@ class EnvironmentVariable extends Value
      */
     public function __toString()
     {
-        if ($this->values === null || count($this->values) === 0) {
-            return '';
-        }
-
-        return $this->getValuesAsString();
+        return $this->value;
     }
 }

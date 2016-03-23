@@ -35,6 +35,6 @@ class Command extends atoum\test
         $command->addSubCommand('commit');
         $command->addArgument('interactive');
         $command->addFlag('m', 'message for commit');
-        $this->assert->string((string)$command)->isEqualTo("CURRENT=`pwd` HOME='/home/username' 'git' 'commit' --interactive -m 'message for commit'");
+        $this->assert->string((string)$command)->isEqualTo("'git' 'commit' --interactive -m 'message for commit'");
     }
 }

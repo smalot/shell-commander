@@ -68,9 +68,17 @@ class Command
             $environment = new EnvironmentVariable($environment, $value);
         }
 
-        $this->environments[] = $environment;
+        $this->environments[$environment->getName()] = $environment->getValue();
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEnvironmentVariables()
+    {
+        return $this->environments;
     }
 
     /**
@@ -125,13 +133,7 @@ class Command
      */
     public function __toString()
     {
-        $command = '';
-
-        if ($this->environments) {
-            $command .= implode(' ', $this->environments) . ' ';
-        }
-
-        $command .= escapeshellarg($this->command) . ' ';
+        $command = escapeshellarg($this->command) . ' ';
 
         if ($this->subCommands) {
             $command .= implode(' ', $this->subCommands) . ' ';

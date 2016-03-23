@@ -20,13 +20,24 @@ class ProcOpen extends atoum\test
         $command->addFlag('a');
         $command->addFlag('l');
         $command->addParam('/tmp');
-
         $runner->run($command, 1);
 
         $this->assert->integer($runner->getReturnCode())->isEqualTo(0);
         $this->assert->float($runner->getDuration())->isGreaterThan(0);
         $this->assert->float($runner->getDuration())->isLessThan(2);
         $this->assert->string($runner->getOutput())->contains('total');
+        $this->assert->string($runner->getError())->isEqualTo('');
+
+        // Check environment variable.
+        $command = new \Smalot\Commander\Command('echo');
+        $command->addEnvironmentVariable('HOME', '/home/username');
+        $command->addParam('$HOME');
+        
+        $runner->run($command, 1);
+
+        $this->assert->integer($runner->getReturnCode())->isEqualTo(0);
+        $this->assert->float($runner->getDuration())->isLessThan(1);
+        $this->assert->string($runner->getOutput())->isEqualTo('/home/username' . PHP_EOL);
         $this->assert->string($runner->getError())->isEqualTo('');
 
         // Timeout !

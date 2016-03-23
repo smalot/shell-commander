@@ -51,11 +51,14 @@ class ProcOpen
      */
     public function run(Command $command, $timeout = -1)
     {
-        $process = new Process((string) $command, null, array(), null, $timeout);
+        // Reset previous values.
+        $this->duration = $this->returnCode = $this->stdout = $this->stderr = null;
+
+        $process = new Process((string) $command, null, $command->getEnvironmentVariables(), null, $timeout);
         $start = microtime(true);
         $process->run();
-        $this->duration = microtime(true) - $start;
 
+        $this->duration = microtime(true) - $start;
         $this->returnCode = $process->getExitCode();
         $this->stdout = $process->getOutput();
         $this->stderr = $process->getErrorOutput();
